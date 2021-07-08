@@ -22,9 +22,16 @@ const addTask = (task) => {
 
 const finishTask = (e) => {
 	const item = e.target.parentNode;
-	item.style.textDecoration = "line-through";
+	let done = item.style.textDecoration == "line-through";
+	if (done) {
+		item.style.textDecoration = null;
+		done = false;
+	} else {
+		item.style.textDecoration = "line-through";
+		done = true;
+	}
 	let tasks = JSON.parse(localStorage.getItem("tasks"));
-	tasks = tasks.map((task) => (task.id == item.id ? { ...task, done: true } : task));
+	tasks = tasks.map((task) => (task.id == item.id ? { ...task, done: done } : task));
 	localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
