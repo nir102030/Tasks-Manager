@@ -142,10 +142,10 @@ input {
 		font-size: 8vw;
 	}
 	[class="list-item-text"] {
-		font-size: 1rem;
+		font-size: 1.5rem;
 	}
 	input {
-		font-size: 1rem;
+		font-size: 1.5rem;
 		height: 2rem;
 	}
 	h1 {
@@ -155,11 +155,11 @@ input {
 		font-size: 2rem;
 	}
 	.check-icon {
-		font-size: 1.2rem;
-		right: 2.5rem;
+		font-size: 1.5rem;
+		right: 3rem;
 	}
 	.delete-icon {
-		font-size: 1.2rem;
+		font-size: 1.5rem;
 		right: 1rem;
 	}
 }
