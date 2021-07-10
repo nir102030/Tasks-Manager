@@ -126,11 +126,16 @@ class UI {
 		task.className = "list-item";
 		task.draggable = true;
 		task.style.textDecoration = newTask.done ? "line-through" : "";
+		const value = newTask.value;
+		const taskElement = document.createElement("input");
+		taskElement.setAttribute("class", "list-item-input");
+		taskElement.setAttribute("value", value);
+		taskElement.setAttribute("disabled", true);
 		task.innerHTML = `
 				<i class="fas fa-check-square check-icon"></i>
 				<i class="fas fa-trash-alt delete-icon"></i>
-				<input class="list-item-input" value=${newTask.value} disabled />
 		`;
+		task.appendChild(taskElement);
 		return task;
 	}
 }
