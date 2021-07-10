@@ -80,6 +80,10 @@ h1 {
 	margin-bottom: 0.5%;
 }
 
+.list-item.over {
+	border: 3px dotted #666;
+}
+
 .tasks-list-item-fall {
 	transform: translateY(12rem) rotateZ(10deg);
 	opacity: 0;
