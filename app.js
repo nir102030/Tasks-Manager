@@ -1,101 +1,159 @@
-const addTask = (task) => {
-	const input = task ? task.value : document.getElementById("task-input").value;
-	const done = task ? task.done : false;
-	if (input) {
-		const tasksContainer = document.getElementById("tasks-list");
-		let maxTaskIndex = 0;
-		tasksContainer.querySelectorAll("div").forEach((task) => {
-			if (task.id > maxTaskIndex) maxTaskIndex = parseInt(task.id);
-		});
-		const taskIndex = task ? task.id : maxTaskIndex + 1;
-		const newTaskElement = createNewTaskElement(input, taskIndex, done);
-		tasksContainer.insertBefore(newTaskElement, tasksContainer.lastElementChild);
-		document.getElementById("task-input").value = "";
-		if (!task) {
-			let tasks = localStorage.getItem("tasks") ? localStorage.getItem("tasks") : [];
-			tasks = tasks.length > 0 ? JSON.parse(tasks) : tasks;
-			tasks = [...tasks, { id: taskIndex, value: input, done: false }];
-			localStorage.setItem("tasks", JSON.stringify(tasks));
-		}
-	} else alert("You must provide a task description");
-};
-
-const finishTask = (e) => {
-	const item = e.target.parentNode;
-	let done = item.style.textDecoration == "line-through";
-	if (done) {
-		item.style.textDecoration = null;
-		done = false;
-	} else {
-		item.style.textDecoration = "line-through";
-		done = true;
+class TasksList {
+	constructor(initialTasks) {
+		this.tasks = initialTasks;
 	}
-	let tasks = JSON.parse(localStorage.getItem("tasks"));
-	tasks = tasks.map((task) => (task.id == item.id ? { ...task, done: done } : task));
-	localStorage.setItem("tasks", JSON.stringify(tasks));
-};
 
-const deleteTask = (e) => {
-	const item = e.target.parentNode;
-	item.addEventListener("transitionend", function () {
-		item.remove();
-	});
-	item.classList.add("todo-list-item-fall");
-	let tasks = JSON.parse(localStorage.getItem("tasks"));
-	tasks = tasks.filter((task) => task.id != item.id);
-	localStorage.setItem("tasks", JSON.stringify(tasks));
-};
+	addTask(task) {
+		this.tasks.push(task);
+	}
 
-const clearAllTasks = () => {
-	document.getElementById("tasks-list").innerHTML =
-		'<span class="clear-all-text" onclick="clearAllTasks()">Clear All</span>';
-	localStorage.removeItem("tasks");
-};
+	updateTask(updatedTask) {
+		this.tasks = this.tasks.map((task) => (task.index == updatedTask.index ? updatedTask : task));
+	}
 
-const createNewTaskElement = (input, index, done) => {
-	var task = document.createElement("div");
-	task.className = "list-item";
-	task.setAttribute("id", index);
-	const checkIcon = createTaskChildren("i", "fas fa-check-square check-icon", (e) => finishTask(e), null, task);
-	task.appendChild(checkIcon);
-	const deleteIcon = createTaskChildren("i", "fas fa-trash-alt delete-icon", () => deleteTask(), null, task);
-	task.appendChild(deleteIcon);
-	const taskDescription = createTaskChildren("li", "list-item-text", null, input, task);
-	done ? (taskDescription.style.textDecoration = "line-through") : null;
-	task.appendChild(taskDescription);
-	return task;
-};
+	deleteTask(taskId) {
+		this.tasks = this.tasks.filter((task) => task.index != taskId);
+	}
 
-const createTaskChildren = (elementName, className, onclick, input, parent) => {
-	const child = document.createElement(elementName);
-	child.className = className;
-	child.onClick = onclick ? onclick : null;
-	child.innerHTML = input ? input : "";
-	return child;
-};
+	getTask(id) {
+		return this.tasks.find((task) => task.index == id);
+	}
 
-const input = document.getElementById("task-input");
-input.addEventListener("keyup", function (event) {
+	getTasks() {
+		return this.tasks;
+	}
+
+	setTasks(tasks) {
+		this.tasks = tasks;
+	}
+
+	getMaxTaskIndex() {
+		let maxIndex = 0;
+		this.tasks.length > 0
+			? this.tasks.forEach((task) => {
+					if (task.index > maxIndex) maxIndex = task.index;
+			  })
+			: null;
+		return maxIndex;
+	}
+}
+
+class UI {
+	initialTasks(tasks) {
+		const tasksContainer = document.getElementById("tasks-list");
+		tasks.forEach((task) => {
+			const taskElement = this.createNewTaskElement(task);
+			tasksContainer.insertBefore(taskElement, tasksContainer.lastElementChild);
+		});
+	}
+
+	// add a new task to the Tasks List (on TasksList instance and on DOM)
+	addTask() {
+		const taskInputElement = document.getElementById("task-input");
+		const taskDescription = taskInputElement.value;
+
+		if (taskDescription) {
+			// create the task object and add it to the tasks list instance
+			const index = tasksList.getMaxTaskIndex() + 1;
+			const newTask = { index: index, description: taskDescription, done: false };
+			tasksList.addTask(newTask);
+
+			//add the task to DOM
+			const tasksContainer = document.getElementById("tasks-list");
+			const newTaskElement = this.createNewTaskElement(newTask);
+			tasksContainer.insertBefore(newTaskElement, tasksContainer.lastElementChild);
+
+			//reset the task input on DOM
+			taskInputElement.value = "";
+
+			//update local storage
+			localStorage.setItem("tasks", JSON.stringify(tasksList.getTasks()));
+		} else {
+			alert("You must provide a task description");
+		}
+	}
+
+	// check/uncheck task on the tasksList instance and on the DOM
+	taskChecked(taskElement) {
+		// get the task object from the tasksList instance
+		const task = tasksList.getTask(taskElement.id);
+
+		// if the task is marked as done - uncheck it, otherwise - check it
+		const textDecoration = task.done ? "" : "line-through";
+
+		tasksList.updateTask({ ...task, done: !task.done }); // update tasksList instance
+		taskElement.style.textDecoration = textDecoration; // update task element on DOM
+
+		//update local storage
+		localStorage.setItem("tasks", JSON.stringify(tasksList.getTasks()));
+	}
+
+	deleteTask(taskElement) {
+		// remove the task object from the tasksList instance
+		tasksList.deleteTask(taskElement.id);
+
+		// remove task from DOM with a fall animation
+		taskElement.addEventListener("transitionend", function () {
+			taskElement.remove();
+		});
+		taskElement.classList.add("tasks-list-item-fall");
+
+		//update local storage
+		localStorage.setItem("tasks", JSON.stringify(tasksList.getTasks()));
+	}
+
+	clearAllTasks() {
+		// clear all tasks from the tasksList instance
+		tasksList.setTasks([]);
+
+		// clear all tasks from the DOM (leave only the "clear all" button)
+		document.getElementById("tasks-list").innerHTML =
+			'<span class="clear-all-text" onclick="clearAllTasks()">Clear All</span>';
+
+		//update local storage
+		localStorage.setItem("tasks", JSON.stringify(tasksList.getTasks()));
+	}
+
+	createNewTaskElement(newTask) {
+		var task = document.createElement("div");
+		task.id = newTask.index;
+		task.className = "list-item";
+		task.style.textDecoration = newTask.done ? "line-through" : "";
+		task.innerHTML = `
+				<i class="fas fa-check-square check-icon"></i>
+				<i class="fas fa-trash-alt delete-icon"></i>
+				<li class="list-item-text">${newTask.description}</li>
+		`;
+		return task;
+	}
+}
+
+//################## Initiate Classes #########################
+const ui = new UI();
+const tasksList = new TasksList([]);
+
+//##################### Event Listeners #######################
+
+// add task on enter key press
+document.getElementById("task-input").addEventListener("keyup", function (event) {
 	// Number 13 is the "Enter" key on the keyboard
 	if (event.keyCode === 13) {
 		// Cancel the default action, if needed
 		event.preventDefault();
-		addTask();
+		ui.addTask();
 	}
 });
 
-document.getElementById("tasks-list").addEventListener("click", handleClickDeleteOrCheck);
-function handleClickDeleteOrCheck(e) {
-	if (e.target.className == "fas fa-check-square check-icon") finishTask(e);
-
-	if (e.target.className == "fas fa-trash-alt delete-icon") deleteTask(e);
-}
+// finish task / delete task event listeners
+document.getElementById("tasks-list").addEventListener("click", (e) => {
+	if (e.target.className == "fas fa-check-square check-icon") ui.taskChecked(e.target.parentNode);
+	if (e.target.className == "fas fa-trash-alt delete-icon") ui.deleteTask(e.target.parentNode);
+});
 
 const initiateTasks = () => {
 	const tasks = JSON.parse(localStorage.getItem("tasks"));
-	if (tasks) {
-		tasks.forEach((task) => addTask(task));
-	}
+	tasksList.setTasks(tasks);
+	ui.initialTasks(tasks);
 };
 
 document.addEventListener("onload", initiateTasks());
