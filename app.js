@@ -8,15 +8,15 @@ class TasksList {
 	}
 
 	updateTask(updatedTask) {
-		this.tasks = this.tasks.map((task) => (task.index == updatedTask.index ? updatedTask : task));
+		this.tasks = this.tasks.map((task) => (task.id == updatedTask.id ? updatedTask : task));
 	}
 
 	deleteTask(taskId) {
-		this.tasks = this.tasks.filter((task) => task.index != taskId);
+		this.tasks = this.tasks.filter((task) => task.id != taskId);
 	}
 
 	getTask(id) {
-		return this.tasks.find((task) => task.index == id);
+		return this.tasks.find((task) => task.id == id);
 	}
 
 	getTasks() {
@@ -27,14 +27,14 @@ class TasksList {
 		this.tasks = tasks;
 	}
 
-	getMaxTaskIndex() {
-		let maxIndex = 0;
+	getMaxTaskId() {
+		let maxId = 0;
 		this.tasks.length > 0
 			? this.tasks.forEach((task) => {
-					if (task.index > maxIndex) maxIndex = task.index;
+					if (task.id > maxId) maxId = task.id;
 			  })
 			: null;
-		return maxIndex;
+		return maxId;
 	}
 }
 
@@ -54,8 +54,8 @@ class UI {
 
 		if (taskDescription) {
 			// create the task object and add it to the tasks list instance
-			const index = tasksList.getMaxTaskIndex() + 1;
-			const newTask = { index: index, description: taskDescription, done: false };
+			const id = tasksList.getMaxTaskId() + 1;
+			const newTask = { id: id, value: taskDescription, done: false };
 			tasksList.addTask(newTask);
 
 			//add the task to DOM
@@ -116,13 +116,13 @@ class UI {
 
 	createNewTaskElement(newTask) {
 		var task = document.createElement("div");
-		task.id = newTask.index;
+		task.id = newTask.id;
 		task.className = "list-item";
 		task.style.textDecoration = newTask.done ? "line-through" : "";
 		task.innerHTML = `
 				<i class="fas fa-check-square check-icon"></i>
 				<i class="fas fa-trash-alt delete-icon"></i>
-				<li class="list-item-text">${newTask.description}</li>
+				<li class="list-item-text">${newTask.value}</li>
 		`;
 		return task;
 	}
