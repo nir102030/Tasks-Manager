@@ -95,6 +95,7 @@ h1 {
 	font-size: 1.5rem;
 	background-color: rgba(0, 0, 0, 0);
 	padding: 3%;
+	margin-right: 5rem;
 }
 
 .list-item-input-edit {
@@ -110,12 +111,13 @@ h1 {
 	background-color: rgba(0, 0, 0, 0.1);
 	border-radius: 5px;
 	padding-left: 2rem;
+	margin-right: 5rem;
 }
 
 .check-icon {
 	position: absolute;
 	flex: 1;
-	right: 4rem;
+	right: 3rem;
 	font-size: 2rem;
 	color: rgba(0, 0, 0, 0.5);
 }
@@ -128,7 +130,7 @@ h1 {
 .delete-icon {
 	position: absolute;
 	flex: 1;
-	right: 1.5rem;
+	right: 0.5rem;
 	font-size: 2rem;
 	color: rgba(0, 0, 0, 0.5);
 }
@@ -172,10 +174,12 @@ h1 {
 	[class="list-item-input"] {
 		font-size: 1.5rem;
 		width: 90%;
+		margin-right: 4rem;
 	}
 	[class="list-item-input-edit"] {
 		font-size: 1.5rem;
 		width: 90%;
+		margin-right: 4rem;
 	}
 	#new-task-input {
 		font-size: 1.5rem;
@@ -189,10 +193,10 @@ h1 {
 	}
 	.check-icon {
 		font-size: 1.5rem;
-		right: 2.5rem;
+		right: 2.2rem;
 	}
 	.delete-icon {
 		font-size: 1.5rem;
-		right: 0.5rem;
+		right: 0.3rem;
 	}
 }

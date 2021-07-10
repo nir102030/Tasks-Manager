@@ -124,6 +124,7 @@ class UI {
 		var task = document.createElement("li");
 		task.id = newTask.id;
 		task.className = "list-item";
+		task.draggable = true;
 		task.style.textDecoration = newTask.done ? "line-through" : "";
 		task.innerHTML = `
 				<i class="fas fa-check-square check-icon"></i>
