@@ -42,7 +42,7 @@ h1 {
 	cursor: pointer;
 }
 
-input {
+#new-task-input {
 	width: 100%;
 	border: solid 1px rgba(0, 0, 0, 0.2);
 	border-radius: 5px;
@@ -74,6 +74,10 @@ input {
 	align-items: center;
 	position: relative;
 	transition: all 0.3s ease-out;
+	margin-right: 2%;
+	margin-left: 2%;
+	margin-top: 0.5%;
+	margin-bottom: 0.5%;
 }
 
 .tasks-list-item-fall {
@@ -81,8 +85,7 @@ input {
 	opacity: 0;
 }
 
-.list-item-text {
-	margin: 2% 5%;
+.list-item-input {
 	padding-bottom: 2%;
 	list-style: none;
 	border: solid rgba(0, 0, 0, 0.1);
@@ -90,12 +93,29 @@ input {
 	flex-wrap: wrap;
 	flex: 1;
 	font-size: 1.5rem;
+	background-color: rgba(0, 0, 0, 0);
+	padding: 3%;
+}
+
+.list-item-input-edit {
+	padding-bottom: 2%;
+	list-style: none;
+	border: solid rgba(0, 0, 0, 0.1);
+	border-width: 0px 0px 1px 0px;
+	flex-wrap: wrap;
+	flex: 1;
+	font-size: 1.5rem;
+	background-color: rgba(0, 0, 0, 0);
+	padding: 3%;
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	padding-left: 2rem;
 }
 
 .check-icon {
 	position: absolute;
 	flex: 1;
-	right: 6rem;
+	right: 4rem;
 	font-size: 2rem;
 	color: rgba(0, 0, 0, 0.5);
 }
@@ -108,7 +128,7 @@ input {
 .delete-icon {
 	position: absolute;
 	flex: 1;
-	right: 3.5rem;
+	right: 1.5rem;
 	font-size: 2rem;
 	color: rgba(0, 0, 0, 0.5);
 }
@@ -130,6 +150,14 @@ input {
 	color: rgba(0, 0, 0, 0.6);
 }
 
+.fa-check {
+	position: absolute;
+	font-size: 1rem;
+	left: 0.5rem;
+	color: rgba(50, 150, 50, 0.5);
+	cursor: pointer;
+}
+
 @media only screen and (max-width: 768px) {
 	/* For mobile phones: */
 	[class="input-container"] {
@@ -141,10 +169,11 @@ input {
 	[class="container"] {
 		font-size: 8vw;
 	}
-	[class="list-item-text"] {
+	[class="list-item-input"] {
 		font-size: 1.5rem;
+		width: 90%;
 	}
-	input {
+	#new-task-input {
 		font-size: 1.5rem;
 		height: 2rem;
 	}
@@ -156,10 +185,10 @@ input {
 	}
 	.check-icon {
 		font-size: 1.5rem;
-		right: 3rem;
+		right: 2.5rem;
 	}
 	.delete-icon {
 		font-size: 1.5rem;
-		right: 1rem;
+		right: 0.5rem;
 	}
 }

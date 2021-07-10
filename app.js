@@ -39,7 +39,7 @@ class TasksList {
 }
 
 class UI {
-	initialTasks(tasks) {
+	initiateTasks(tasks) {
 		const tasksContainer = document.getElementById("tasks-list");
 		tasks.forEach((task) => {
 			const taskElement = this.createNewTaskElement(task);
@@ -49,9 +49,8 @@ class UI {
 
 	// add a new task to the Tasks List (on TasksList instance and on DOM)
 	addTask() {
-		const taskInputElement = document.getElementById("task-input");
+		const taskInputElement = document.getElementById("new-task-input");
 		const taskDescription = taskInputElement.value;
-
 		if (taskDescription) {
 			// create the task object and add it to the tasks list instance
 			const id = tasksList.getMaxTaskId() + 1;
@@ -102,6 +101,13 @@ class UI {
 		localStorage.setItem("tasks", JSON.stringify(tasksList.getTasks()));
 	}
 
+	editTask(value, id) {
+		const taskToUpdated = tasksList.getTask(id);
+		const editedTask = { ...taskToUpdated, value: value };
+		tasksList.updateTask(editedTask);
+		localStorage.setItem("tasks", JSON.stringify(tasksList.getTasks()));
+	}
+
 	clearAllTasks() {
 		// clear all tasks from the tasksList instance
 		tasksList.setTasks([]);
@@ -115,18 +121,20 @@ class UI {
 	}
 
 	createNewTaskElement(newTask) {
-		var task = document.createElement("div");
+		var task = document.createElement("li");
 		task.id = newTask.id;
 		task.className = "list-item";
 		task.style.textDecoration = newTask.done ? "line-through" : "";
 		task.innerHTML = `
 				<i class="fas fa-check-square check-icon"></i>
 				<i class="fas fa-trash-alt delete-icon"></i>
-				<li class="list-item-text">${newTask.value}</li>
+				<input class="list-item-input" value=${newTask.value} disabled />
 		`;
 		return task;
 	}
 }
+
+//${newTask.value}
 
 //################## Initiate Classes #########################
 const ui = new UI();
@@ -135,7 +143,7 @@ const tasksList = new TasksList([]);
 //##################### Event Listeners #######################
 
 // add task on enter key press
-document.getElementById("task-input").addEventListener("keyup", function (event) {
+document.getElementById("new-task-input").addEventListener("keyup", function (event) {
 	// Number 13 is the "Enter" key on the keyboard
 	if (event.keyCode === 13) {
 		// Cancel the default action, if needed
@@ -150,10 +158,28 @@ document.getElementById("tasks-list").addEventListener("click", (e) => {
 	if (e.target.className == "fas fa-trash-alt delete-icon") ui.deleteTask(e.target.parentNode);
 });
 
+// initiate tasks from local storage on load
 const initiateTasks = () => {
-	const tasks = JSON.parse(localStorage.getItem("tasks"));
+	const localStorageTasks = JSON.parse(localStorage.getItem("tasks"));
+	const tasks = localStorageTasks ? localStorageTasks : [];
 	tasksList.setTasks(tasks);
-	ui.initialTasks(tasks);
+	ui.initiateTasks(tasks);
 };
-
 document.addEventListener("onload", initiateTasks());
+
+// enable edit task input on double click
+document.getElementById("tasks-list").addEventListener("dblclick", (e) => {
+	if (e.target.className == "list-item-input") {
+		e.target.disabled = false;
+		e.target.className = "list-item-input-edit";
+		const checkElement = document.createElement("i");
+		checkElement.className = "fas fa-check";
+		checkElement.addEventListener("click", () => {
+			ui.editTask(e.target.value, e.target.parentNode.id);
+			checkElement.remove();
+			e.target.disabled = true;
+			e.target.className = "list-item-input";
+		});
+		e.target.parentNode.appendChild(checkElement);
+	}
+});
