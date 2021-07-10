@@ -173,6 +173,10 @@ h1 {
 		font-size: 1.5rem;
 		width: 90%;
 	}
+	[class="list-item-input-edit"] {
+		font-size: 1.5rem;
+		width: 90%;
+	}
 	#new-task-input {
 		font-size: 1.5rem;
 		height: 2rem;
