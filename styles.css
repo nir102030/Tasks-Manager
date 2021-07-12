@@ -172,6 +172,8 @@ h1 {
 	[class="tasks-list"] {
 		width: 90%;
 	}
+	[class="list-item"] {
+	}
 	[class="container"] {
 		font-size: 8vw;
 	}
