@@ -14,13 +14,13 @@
 <body class='container'>
     <h1>My Tasks</h1>
     <div class='input-container'>
-        <i class="fas fa-plus-square plus-icon" id="add-task-button" onclick="ui.addTask()"></i>
+        <i class="fas fa-plus-square plus-icon" id="add-task-button"></i>
         <input type="text" id='task-input' placeholder="Add a New Task..."></input>
     </div>   
     <ul class='tasks-list' id='tasks-list'>
-        <span class='clear-all-text' onclick="ui.clearAllTasks()">Clear All</span>
+        <span class='clear-all-text'>Clear All</span>
     </ul>
-    <script src='app.js'>
+    <script type="module" src='app.js'>
     </script>
 </body>
 </html>
