@@ -31,7 +31,7 @@ document
   });
 
 // clear all tasks
-document.getElementById("tasks-list").addEventListener("click", function () {
+document.getElementById("clear-all").addEventListener("click", function () {
   ui.clearAllTasks();
 });
 
